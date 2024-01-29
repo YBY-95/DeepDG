@@ -173,37 +173,3 @@ def train(args):
         f.write('total cost time:%s\n' % (str(time.time()-sss)))
         f.write('valid acc:%.4f\n' % (best_valid_acc))
         f.write('target acc:%.4f' % (target_acc))
-
-
-if __name__ == '__main__':
-
-    test_speed = ['100-150', '100', '150']
-
-    channel_list = ['B1-4_CH1-8', 'B5-9_CH9-16']
-
-    method_list = ['CORAL', 'DANN', 'ERM', 'Mixup', 'MLDG', 'MMD', 'GroupDRO',
-                   'RSC', 'VREx', 'DIFEX', 'ANDMask']
-
-    args = get_args()
-    set_random_seed(args.seed)
-
-    # 设置样本相关参数
-    setattr(args, 'dataset', 'ZXJ_GD')
-    setattr(args, 'data_dir', r'D:\DATABASE\ZXJ_GD\var_speed_sample\DG\\')
-
-    # 设置domain
-    domains = [speed + '_' + channel_list[0] for speed in test_speed]
-    setattr(args, 'domains', domains)
-    args.img_dataset["ZXJ_GD"] = domains
-
-    for method in method_list:
-        # 设置输出训练记录保存路径
-        args.output = r'train_output//' + time.strftime('%Y_%m_%d_%H_%M_%S', time.localtime())
-        if os.path.exists(args.output) is False:
-            os.makedirs(os.path.dirname(args.output + '\\'))
-        sys.stdout = Tee(os.path.join(args.output, 'out.txt'))
-        sys.stderr = Tee(os.path.join(args.output, 'err.txt'))
-
-        # 设置泛化方法
-        setattr(args, 'algorithm', method)
-        train(args)
