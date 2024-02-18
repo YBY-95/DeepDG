@@ -35,7 +35,12 @@ if __name__ == '__main__':
             args.img_dataset["ZXJ_GD"] = domains
 
             # 设置记录存档
-            args.output = r'train_output//' + time.strftime('%Y_%m_%d_%H_%M_%S', time.localtime())
+            """
+            或许是由于输出变量出现了一些重叠的原因，训练记录文件的保存出现了一个非常搞笑的状况：日期最早的训练记录里会包含本次便利所有的
+            全部记录（目前不能确定保存的model文件否也发生了未知的重叠）
+            """
+            args.output = r'D:\python_workfile\TL-comparsion\DeepDG\train_output\Target-VarSpeed_Source-StableSpeed//' \
+                          + time.strftime('%Y_%m_%d_%H_%M_%S', time.localtime())
             if os.path.exists(args.output) is False:
                 os.makedirs(os.path.dirname(args.output + '\\'))
             sys.stdout = Tee(os.path.join(args.output, 'out.txt'))
